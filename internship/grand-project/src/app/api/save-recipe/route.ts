@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { cookies } from 'next/headers'; // if using cookies/session
 
 export async function POST(req: NextRequest) {
   const { userEmail, title, content, imageUrl } = await req.json();
