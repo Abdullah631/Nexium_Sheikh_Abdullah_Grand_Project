@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { generateRecipe } from "../../utils/generateRecipe";
 import { getRecipeImage } from "@/utils/generateImage";
-import { supabase } from "@/lib/supabseClient";
+import { supabase } from "@/lib/supabaseClient";
 import FloatingEmojis from "@/components/floatingEmojis";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";

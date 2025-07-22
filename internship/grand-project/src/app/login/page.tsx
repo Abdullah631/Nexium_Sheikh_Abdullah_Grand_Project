@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { supabase } from "@/lib/supabseClient";
+import { supabase } from "@/lib/supabaseClient";
 import FloatingEmojis from "@/components/floatingEmojis";
 
 export default function Login() {

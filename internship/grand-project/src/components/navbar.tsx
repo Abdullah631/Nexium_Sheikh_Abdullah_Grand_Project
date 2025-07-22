@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { supabase } from "@/lib/supabseClient";
+import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -34,6 +34,11 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Link href="/">
+            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full px-4 py-2 shadow-md transform hover:scale-105 transition-all duration-300 font-semibold animate-pulse-glow cursor-pointer">
+              🏠 Home
+            </Button>
+          </Link>
           <Link href="/about">
             <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full px-4 py-2 shadow-md transform hover:scale-105 transition-all duration-300 font-semibold animate-pulse-glow cursor-pointer">
               🧑‍🍳 About

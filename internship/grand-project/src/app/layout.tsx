@@ -1,7 +1,16 @@
+// app/layout.tsx
 import './globals.css';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
-export default function Layout({ children }: { children: React.ReactNode }) {
+
+export const metadata = {
+  title: 'Recipe AI',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
