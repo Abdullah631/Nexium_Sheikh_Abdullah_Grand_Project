@@ -10,10 +10,11 @@ import { supabase } from "@/lib/supabaseClient";
 import FloatingEmojis from "@/components/floatingEmojis";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github.css"; // or any other theme
-import "highlight.js/styles/github-dark.css"; // or solarized-light, vs2015, etc.
+import "highlight.js/styles/github.css";
+import "highlight.js/styles/github-dark.css";
 
 export default function RecipeGenerator() {
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [input, setInput] = useState("");
   const [recipe, setRecipe] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,6 @@ export default function RecipeGenerator() {
       const recipeText = await generateRecipe(input);
       console.log("Generated recipe text:", recipeText);
 
-      // Extract title from section after the Markdown heading
       const titleSection = recipeText.split(
         /\*\*1\. Title of Recipe:?\*\*/i
       )[1];
@@ -45,7 +45,10 @@ export default function RecipeGenerator() {
 
   const handleSave = async () => {
     const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return alert("Login required to save recipes.");
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
 
     const response = await fetch("/api/save-recipe", {
       method: "POST",
@@ -109,6 +112,32 @@ export default function RecipeGenerator() {
                 alt="Generated dish"
                 className="rounded-lg w-full max-w-sm mx-auto mb-4 shadow-md"
               />
+            )}
+            {showLoginModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+                  <h2 className="text-lg font-semibold mb-4 text-red-600">
+                    Login Required
+                  </h2>
+                  <p className="mb-4 text-gray-700">
+                    Please log in to save your recipe.
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => setShowLoginModal(false)}
+                      className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => (window.location.href = "/login")}
+                      className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                    >
+                      Go to Login
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
 
             <div className="prose prose-lg text-amber-800 bg-white bg-opacity-80 p-6 rounded-xl shadow-md">
