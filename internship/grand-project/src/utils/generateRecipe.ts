@@ -11,8 +11,6 @@ function removeIntroSentence(text: string): string {
 
 export async function generateRecipe(recipeText: string): Promise<string> {
   const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK;
-  console.log(webhookUrl);
-
   try {
     const response = await fetch(`${webhookUrl}?query=${encodeURIComponent(recipeText)}`);
 

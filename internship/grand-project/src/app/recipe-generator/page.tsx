@@ -25,14 +25,24 @@ export default function RecipeGenerator() {
     setLoading(true);
     try {
       const recipeText = await generateRecipe(input);
+      let title = "Cooked " + input;
+      const titleRegex = /\*\*\d*\.*\s*Title of Recipe:?\*\*/i;
+      const titleMatch = recipeText.match(titleRegex);
 
-      const titleSection = recipeText.split(
-        /\*\*1\. Title of Recipe:?\*\*/i
-      )[1];
-      const title = titleSection
-        ? titleSection.split("\n")[1].trim()
-        : "Cooked " + input;
-      const imageUrl = await getRecipeImage("Cooked"+title);
+      if (titleMatch && titleMatch.index !== undefined) {
+        const afterMatch = recipeText
+          .slice(titleMatch.index + titleMatch[0].length)
+          .trim();
+        const lines = afterMatch
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+        if (lines.length > 0) {
+          title = lines[0];
+        }
+      }
+
+      const imageUrl = await getRecipeImage(title);
       setRecipe({ text: recipeText, imageUrl, title });
     } catch (err) {
       alert("Failed to generate recipe. Please try again.");
@@ -62,6 +72,7 @@ export default function RecipeGenerator() {
 
       const result = await response.json();
       if (result.message) {
+        setSaving(false);
         alert(result.message);
       } else {
         alert(result.error || "Something went wrong");
