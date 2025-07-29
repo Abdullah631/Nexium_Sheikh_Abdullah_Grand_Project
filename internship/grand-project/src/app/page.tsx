@@ -3,6 +3,7 @@ import FloatingEmojis from "@/components/floatingEmojis";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-orange-100 via-red-100 to-yellow-50 overflow-hidden flex items-center justify-center px-6 py-12">

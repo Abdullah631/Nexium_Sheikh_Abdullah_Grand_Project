@@ -18,13 +18,13 @@ export default function RecipeGenerator() {
   const [input, setInput] = useState("");
   const [recipe, setRecipe] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handleGenerate = async () => {
     if (!input.trim()) return alert("Please describe your preferences first!");
     setLoading(true);
     try {
       const recipeText = await generateRecipe(input);
-      console.log("Generated recipe text:", recipeText);
 
       const titleSection = recipeText.split(
         /\*\*1\. Title of Recipe:?\*\*/i
@@ -32,8 +32,6 @@ export default function RecipeGenerator() {
       const title = titleSection
         ? titleSection.split("\n")[1].trim()
         : "Cooked " + input;
-      console.log("Extracted title:", title);
-
       const imageUrl = await getRecipeImage(title);
 
       setRecipe({ text: recipeText, imageUrl, title });
@@ -50,23 +48,29 @@ export default function RecipeGenerator() {
       return;
     }
 
-    const response = await fetch("/api/save-recipe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userEmail: user.email,
-        title: recipe.title,
-        content: recipe.text,
-        imageUrl: recipe.imageUrl,
-      }),
-    });
+    setSaving(true);
+    try {
+      const response = await fetch("/api/save-recipe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userEmail: user.email,
+          title: recipe.title,
+          content: recipe.text,
+          imageUrl: recipe.imageUrl,
+        }),
+      });
 
-    const result = await response.json();
-    if (result.message) {
-      alert(result.message);
-    } else {
-      alert(result.error || "Something went wrong");
+      const result = await response.json();
+      if (result.message) {
+        alert(result.message);
+      } else {
+        alert(result.error || "Something went wrong");
+      }
+    } catch (error) {
+      alert("Error saving recipe. Please try again.");
     }
+    setSaving(false);
   };
 
   return (
@@ -148,10 +152,17 @@ export default function RecipeGenerator() {
 
             <button
               onClick={handleSave}
-              className="mt-4 w-full bg-green-500 text-white py-2 hover:bg-green-600 rounded-full font-semibold shadow-md hover:scale-105 transition transform cursor-pointer"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white w-full mt-4 py-2 rounded-full font-semibold shadow-md hover:scale-105 transition transform cursor-pointer"
+              disabled={saving}
             >
-              Save to My Recipes
+              {saving ? "Saving..." : "Save to My Recipes"}
             </button>
+
+            {saving && (
+              <div className="flex justify-center mt-4">
+                <div className="loader ease-linear rounded-full border-4 border-t-4 border-green-600 h-6 w-6 animate-spin"></div>
+              </div>
+            )}
           </div>
         )}
       </div>
