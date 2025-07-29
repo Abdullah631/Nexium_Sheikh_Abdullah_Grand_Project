@@ -32,8 +32,7 @@ export default function RecipeGenerator() {
       const title = titleSection
         ? titleSection.split("\n")[1].trim()
         : "Cooked " + input;
-      const imageUrl = await getRecipeImage(title);
-
+      const imageUrl = await getRecipeImage("Cooked"+title);
       setRecipe({ text: recipeText, imageUrl, title });
     } catch (err) {
       alert("Failed to generate recipe. Please try again.");
